@@ -6,7 +6,7 @@ public class CameraZoom : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] float sensitivity = 10f;
     [SerializeField] float maxCameraDistance;
-    [SerializeField] float minCameraDisctance;
+    [SerializeField] float minCameraDistance;
 
     CinemachineComponentBase componentBase;
     float cameraDistance;
@@ -26,8 +26,8 @@ public class CameraZoom : MonoBehaviour
                     }
                 }else{
                     (componentBase as CinemachineFramingTransposer).m_CameraDistance -= cameraDistance;
-                    if ((componentBase as CinemachineFramingTransposer).m_CameraDistance < minCameraDisctance){
-                        (componentBase as CinemachineFramingTransposer).m_CameraDistance = minCameraDisctance;
+                    if ((componentBase as CinemachineFramingTransposer).m_CameraDistance < minCameraDistance){
+                        (componentBase as CinemachineFramingTransposer).m_CameraDistance = minCameraDistance;
                     }
                 }
             }
