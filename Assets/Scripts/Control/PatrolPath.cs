@@ -7,14 +7,6 @@ namespace RPG.Control
     public class PatrolPath : MonoBehaviour
     {
         [SerializeField] float waypointGizmosRadius = 0.5f;
-        void OnDrawGizmos() {
-            for(int i = 0; i < transform.childCount; i++)
-            {
-                int j = GetNextIndex(i);
-                Gizmos.DrawSphere(GetWaypoint(i), waypointGizmosRadius);
-                Gizmos.DrawLine(GetWaypoint(i), GetWaypoint(j));
-            }
-        }
 
         public int GetNextIndex(int i)
         {
@@ -27,6 +19,15 @@ namespace RPG.Control
         public Vector3 GetWaypoint(int i)
         {
             return transform.GetChild(i).position;
+        }
+
+        private void OnDrawGizmos() {
+            for(int i = 0; i < transform.childCount; i++)
+            {
+                int j = GetNextIndex(i);
+                Gizmos.DrawSphere(GetWaypoint(i), waypointGizmosRadius);
+                Gizmos.DrawLine(GetWaypoint(i), GetWaypoint(j));
+            }
         }
     }
 }

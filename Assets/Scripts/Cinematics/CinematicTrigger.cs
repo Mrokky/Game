@@ -5,9 +5,10 @@ namespace RPG.Cinematics
 {
     public class CinematicTrigger : MonoBehaviour
     {
-        bool wasTriggered = false;
+        bool wasTriggered;
+
         void OnTriggerEnter(Collider other) {
-            if(!wasTriggered && other.gameObject.tag == "Player"){
+            if(!wasTriggered && other.CompareTag("Player")){
                 GetComponent<PlayableDirector>().Play();
                 wasTriggered = true;
             }

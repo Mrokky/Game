@@ -8,9 +8,9 @@ namespace RPG.Stats
     {
         [Range(1, 99)][SerializeField] int startingLevel = 1;
         [SerializeField] CharacterClass characterClass;
-        [SerializeField] Progression progression = null;
-        [SerializeField] GameObject levelUpParticleEffect = null;
-        [SerializeField] bool shouldUseModifiers = false;
+        [SerializeField] Progression progression;
+        [SerializeField] GameObject levelUpParticleEffect;
+        [SerializeField] bool shouldUseModifiers;
 
         public event Action onLevelUp;
 
@@ -38,7 +38,16 @@ namespace RPG.Stats
             }
         }
 
-        void UpdateLevel() {
+        public float GetStat(Stat stat)
+        {
+            return (GetBaseStat(stat) + GetAdditiveModifier(stat)) * (1 + GetPercentageModifier(stat)/100);
+        }
+
+        public int GetLevel(){
+            return currentLevel.value;
+        }
+
+        private void UpdateLevel() {
             int newLevel = CalculateLevel();
             if(newLevel > currentLevel.value){
                 currentLevel.value = newLevel;
@@ -46,30 +55,22 @@ namespace RPG.Stats
             }
         }
 
-        void LevelUpEffect()
+        private void LevelUpEffect()
         {
             Instantiate(levelUpParticleEffect, transform);
             onLevelUp();
         }
 
-        public float GetStat(Stat stat)
-        {
-            return (GetBaseStat(stat) + GetAdditiveModifier(stat)) * (1 + GetPercentageModifier(stat)/100);
-        }
-
-        float GetBaseStat(Stat stat)
+        private float GetBaseStat(Stat stat)
         {
             return progression.GetStat(stat, characterClass, GetLevel());
         }
 
-        public int GetLevel(){
-            return currentLevel.value;
-        }
-
         private float GetAdditiveModifier(Stat stat)
         {
-            if(!shouldUseModifiers) return 0;
             float total = 0;
+            if(!shouldUseModifiers) return 0;
+
             foreach(IModifierProvider provider in GetComponents<IModifierProvider>()){
                 foreach(float modifier in provider.GetAdditiveModifiers(stat)){
                     total += modifier;
@@ -80,8 +81,9 @@ namespace RPG.Stats
 
         float GetPercentageModifier(Stat stat)
         {
-            if(!shouldUseModifiers) return 0;
             float total = 0;
+            if(!shouldUseModifiers) return 0;
+
             foreach(IModifierProvider provider in GetComponents<IModifierProvider>()){
                 foreach(float modifier in provider.GetPercentageModifiers(stat)){
                     total += modifier;
@@ -91,16 +93,18 @@ namespace RPG.Stats
         }
 
         int CalculateLevel(){
-            Experience experience = GetComponent<Experience>();
             if(experience == null) return startingLevel;
+
             float currentXP = experience.GetPoints();
             int penultimateLevel = progression.GetLevels(Stat.ExperienceToLevelUp, characterClass);
+
             for (int level = 1; level <= penultimateLevel; level++){
                 float XPToLevelUp = progression.GetStat(Stat.ExperienceToLevelUp, characterClass, level);
                 if(XPToLevelUp > currentXP){
                     return level;
                 }
             }
+
             return penultimateLevel + 1;
         }
     }    

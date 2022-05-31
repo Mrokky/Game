@@ -7,7 +7,7 @@ namespace RPG.UI.DamageText
 {
     public class DamageText : MonoBehaviour
     {
-        [SerializeField] Text damageText = null;
+        [SerializeField] Text damageText;
 
         public void DestroyText(){
             Destroy(gameObject);

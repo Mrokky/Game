@@ -10,6 +10,7 @@ namespace RPG.Control
     public class PlayerController : MonoBehaviour
     {
         Health health;
+        Mover mover;
 
         [System.Serializable]
         struct CursorMapping{
@@ -18,25 +19,31 @@ namespace RPG.Control
             public Vector2 hotspot;
         }
 
-        [SerializeField] CursorMapping[] cursorMappings = null;
+        [SerializeField] CursorMapping[] cursorMappings;
         [SerializeField] float maxNavMeshProjectionDistance = 1f;
         [SerializeField] float raycastRadius = 1f;
 
         void Awake() {
             health = GetComponent<Health>();
+            mover = GetComponent<Mover>();
         }
+
         void Update()
         {
             if(InteractWithUI()) return;
+
             if(health.IsDead()){
                 SetCursor(CursorType.None);
             }
+
             if(InteractWithComponent()) return;
+
             if(InteractWithMovement()) return;
+
             SetCursor(CursorType.None);
         }
 
-        bool InteractWithUI()
+        private bool InteractWithUI()
         {
             if(EventSystem.current.IsPointerOverGameObject()){  //if cursor is over UI GameObject
                 SetCursor(CursorType.UI);
@@ -45,9 +52,10 @@ namespace RPG.Control
             return false;
         }
 
-        bool InteractWithComponent()
+        private bool InteractWithComponent()
         {
             RaycastHit[] hits = RaycastAllSorted();
+
             foreach(RaycastHit hit in hits){
                 IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
                 foreach(IRaycastable raycastable in raycastables){
@@ -60,40 +68,48 @@ namespace RPG.Control
             return false;
         }
 
-        RaycastHit[] RaycastAllSorted(){
+        private RaycastHit[] RaycastAllSorted(){
             RaycastHit[] hits = Physics.SphereCastAll(GetMouseRay(), raycastRadius);
             float[] distances = new float[hits.Length]; //new array, same length as raycast hits
+
             for (int i = 0; i < hits.Length; i++){
                 distances[i] = hits[i].distance;
             }
+
             Array.Sort(distances, hits);
             return hits;
         }
 
-        bool InteractWithMovement()
+        private bool InteractWithMovement()
         {
             Vector3 target;
             bool hasHit = RaycastNavMesh(out target);
+
             if (hasHit)
             {
-                if(!GetComponent<Mover>().CanMoveTo(target)) return false;
+                if(!mover.CanMoveTo(target)) return false;
+                
                 if(Input.GetMouseButton(0)){
-                    GetComponent<Mover>().StartMoveAction(target, 1f);
+                    mover.StartMoveAction(target, 1f);
                 }
+
                 SetCursor(CursorType.Movement);
                 return true;
             }
+
             return false;
         }
 
-        bool RaycastNavMesh(out Vector3 target){
+        private bool RaycastNavMesh(out Vector3 target){
             target = new Vector3();
             RaycastHit hit;
             bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
+
             if(!hasHit) return false;
 
             NavMeshHit navMeshHit;
             bool hasCastToNavMesh = NavMesh.SamplePosition(hit.point, out navMeshHit, maxNavMeshProjectionDistance, NavMesh.AllAreas);
+
             if(!hasCastToNavMesh) return false;
 
             target = navMeshHit.position;
@@ -101,12 +117,12 @@ namespace RPG.Control
             return true;
         }
 
-        void SetCursor(CursorType type){
+        private void SetCursor(CursorType type){
             CursorMapping mapping = GetCursorMapping(type);
             Cursor.SetCursor(mapping.texture, mapping.hotspot, CursorMode.Auto);
         }
 
-        CursorMapping GetCursorMapping(CursorType type){
+        private CursorMapping GetCursorMapping(CursorType type){
             foreach (CursorMapping mapping in cursorMappings)
             {
                 if(mapping.type == type){

@@ -6,14 +6,14 @@ namespace RPG.Stats
 {
     [CreateAssetMenu(fileName = "Progression", menuName = "Stats/New Progression", order = 0)]
     public class Progression : ScriptableObject {
-        [SerializeField] ProgressionCharacterClass[] characterClasses = null;
+        [SerializeField] ProgressionCharacterClass[] characterClasses;
 
-        Dictionary<CharacterClass, Dictionary<Stat, float[]>> lookupTable = null;
+        Dictionary<CharacterClass, Dictionary<Stat, float[]>> lookupTable;
 
         public float GetStat(Stat stat, CharacterClass characterClass, int level){
             BuildLookup();
-
             float[] levels = lookupTable[characterClass][stat];
+
             if(levels.Length < level){
                 return 0;
             }
@@ -30,6 +30,7 @@ namespace RPG.Stats
         {
             if(lookupTable != null) return;
             lookupTable = new Dictionary<CharacterClass, Dictionary<Stat, float[]>>();
+
             foreach(ProgressionCharacterClass progressionClass in characterClasses){
                 var statLookupTable = new Dictionary<Stat, float[]>();
                 foreach(ProgressionStat progressionStat in progressionClass.stats){
@@ -49,6 +50,6 @@ namespace RPG.Stats
         class ProgressionStat{
             public Stat stat;
             public float[] levels;
-        }
-    }    
+        }   
+    }
 }

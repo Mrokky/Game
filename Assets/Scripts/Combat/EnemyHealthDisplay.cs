@@ -17,6 +17,7 @@ namespace RPG.Combat
                 GetComponent<Text>().text = "Enemy: N/A";
                 return;
             }
+            
             Health health = fighter.GetTarget();
             GetComponent<Text>().text = ("Enemy: " + (int)health.GetHealthPoints() + "/" + (int)health.GetMaxHealthPoints());
             

@@ -10,8 +10,13 @@ namespace RPG.SceneManagement
     public class Portal : MonoBehaviour
     {
         enum DestinationIdentifier{
-            A, B, C, D, E
+            A,
+            B,
+            C,
+            D,
+            E
         }
+
         [SerializeField] int sceneToLoad = -1;
         [SerializeField] Transform spawnPoint;
         [SerializeField] DestinationIdentifier destination;
@@ -20,13 +25,13 @@ namespace RPG.SceneManagement
         [SerializeField] float fadeWaitTime = 0.5f;
 
         void OnTriggerEnter(Collider other) {
-            if(other.tag == "Player"){
+            if(other.CompareTag("Player")){
                 StartCoroutine(Transition());
             }
         }
 
         //Coroutine that runs between scenes
-        IEnumerator Transition(){
+        private IEnumerator Transition(){
             if(sceneToLoad < 0){
                 Debug.LogError("Scene to load is not set");
                 yield break;
@@ -69,7 +74,7 @@ namespace RPG.SceneManagement
             Destroy(gameObject);
         }
 
-        void UpdatePlayer(Portal otherPortal)
+        private void UpdatePlayer(Portal otherPortal)
         {
             Transform player = GameObject.FindWithTag("Player").transform;
             player.GetComponent<NavMeshAgent>().enabled = false;
@@ -78,7 +83,7 @@ namespace RPG.SceneManagement
             player.GetComponent<NavMeshAgent>().enabled = true;
         }
 
-        Portal GetOtherPortal()
+        private Portal GetOtherPortal()
         {
             foreach(Portal portal in FindObjectsOfType<Portal>()){  //Finding every portal in scene
                 if(portal == this) continue;

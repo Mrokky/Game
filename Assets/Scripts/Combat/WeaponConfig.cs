@@ -5,25 +5,29 @@ namespace RPG.Combat
 {
     [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
     public class WeaponConfig : ScriptableObject {
-        [SerializeField] AnimatorOverrideController animatorOverride = null;
-        [SerializeField] Weapon equippedPrefab = null;
+        [SerializeField] AnimatorOverrideController animatorOverride;
+        [SerializeField] Weapon equippedPrefab;
         [SerializeField] float weaponDamage = 5f;
-        [SerializeField] float percentageBonus = 0;
+        [SerializeField] float percentageBonus;
         [SerializeField] float weaponRange = 2f;
         [SerializeField] bool isRightHanded = true;
-        [SerializeField] Projectile projectile = null;
+        [SerializeField] Projectile projectile;
+
         const string weaponName = "Weapon";
 
         public Weapon Spawn(Transform rightHand, Transform leftHand, Animator animator){
             DestroyOldWeapon(rightHand, leftHand);
             Weapon weapon = null;
+
             if(equippedPrefab != null)
             {
                 Transform handTransform = GetTransform(rightHand, leftHand);
                 weapon = Instantiate(equippedPrefab, handTransform);
                 weapon.gameObject.name = weaponName;
             }
+
             var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
+
             if (animatorOverride != null){
                 animator.runtimeAnimatorController = animatorOverride;
             }else if(overrideController != null){
@@ -31,27 +35,6 @@ namespace RPG.Combat
             }
             
             return weapon;
-        }
-
-        void DestroyOldWeapon(Transform rightHand, Transform leftHand){
-            Transform oldWeapon = rightHand.Find(weaponName);
-            if(oldWeapon == null){
-                oldWeapon = leftHand.Find(weaponName);
-            }
-            if(oldWeapon == null) return;
-            oldWeapon.name = "DESTROYING";
-            Destroy(oldWeapon.gameObject);
-        }
-
-        Transform GetTransform(Transform rightHand, Transform leftHand){
-            Transform handTransform;
-            if (isRightHanded){
-                handTransform = rightHand;
-            }
-            else{
-                handTransform = leftHand;
-            }
-            return handTransform;
         }
 
         public bool HasProjectile(){
@@ -73,6 +56,30 @@ namespace RPG.Combat
         
         public float GetWeaponRange(){
             return weaponRange;
+        }
+
+        private void DestroyOldWeapon(Transform rightHand, Transform leftHand){
+            Transform oldWeapon = rightHand.Find(weaponName);
+
+            if(oldWeapon == null){
+                oldWeapon = leftHand.Find(weaponName);
+            }
+
+            if(oldWeapon == null) return;
+            oldWeapon.name = "DESTROYING";
+            Destroy(oldWeapon.gameObject);
+        }
+
+        Transform GetTransform(Transform rightHand, Transform leftHand){
+            Transform handTransform;
+
+            if (isRightHanded){
+                handTransform = rightHand;
+            }else{
+                handTransform = leftHand;
+            }
+            
+            return handTransform;
         }
     }
 }

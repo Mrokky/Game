@@ -17,9 +17,11 @@ namespace RPG.Combat
             if(!callingController.GetComponent<Fighter>().CanAttack(gameObject)){
                 return false;
             }   
+
             if(Input.GetMouseButton(0)){
                 callingController.GetComponent<Fighter>().Attack(gameObject);
             }
+            
             return true;
         }
     }
