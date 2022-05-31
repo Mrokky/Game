@@ -16,7 +16,8 @@ namespace RPG.Movement
         NavMeshAgent navMeshAgent;
         Health health;
 
-        void Awake(){
+        void Awake()
+        {
             navMeshAgent = GetComponent<NavMeshAgent>();
             health = GetComponent<Health>();
         }
@@ -27,12 +28,14 @@ namespace RPG.Movement
             UpdateAnimator();
         }
 
-        public void StartMoveAction(Vector3 destination, float speedFraction){
+        public void StartMoveAction(Vector3 destination, float speedFraction)
+        {
             GetComponent<ActionScheduler>().StartAction(this);
             MoveTo(destination, speedFraction);
         }
 
-        public bool CanMoveTo(Vector3 destination){
+        public bool CanMoveTo(Vector3 destination)
+        {
             NavMeshPath path = new NavMeshPath();
             bool hasPath = NavMesh.CalculatePath(transform.position, destination, NavMesh.AllAreas, path);
 
@@ -52,7 +55,8 @@ namespace RPG.Movement
             navMeshAgent.isStopped = false;
         }
 
-        public void Cancel(){
+        public void Cancel()
+        {
             navMeshAgent.isStopped = true;
         }
 
@@ -73,7 +77,8 @@ namespace RPG.Movement
             navMeshAgent.enabled = true;
         }
 
-        private void UpdateAnimator(){
+        private void UpdateAnimator()
+        {
             Vector3 velocity = navMeshAgent.velocity;   //getting global velocity from NavMeshAgent
             Vector3 localVelocity = transform.InverseTransformDirection(velocity);  //converting from global velocity to local value relative to the character
             float speed = localVelocity.z;

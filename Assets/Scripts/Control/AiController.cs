@@ -29,7 +29,8 @@ namespace RPG.Control
         float timeSinceArrivedAtWaypoint = Mathf.Infinity;
         int currentWaypointIndex;
 
-        void Awake(){
+        void Awake()
+        {
             health = GetComponent<Health>();
             fighter = GetComponent<Fighter>();
             player = GameObject.FindWithTag("Player");
@@ -37,32 +38,41 @@ namespace RPG.Control
             guardPosition = new LazyValue<Vector3>(GetGuardPosition);
         }
 
-        void Start(){
+        void Start()
+        {
             guardPosition.ForceInit();
         }
 
         void Update()
         {
-            if (health.IsDead()){
+            if (health.IsDead())
+            {
                 return;
             }
 
-            if (IsAggrevated() && fighter.CanAttack(player)){
+            if (IsAggrevated() && fighter.CanAttack(player))
+            {
                 AttackBehaviour();
-            }else if (timeSinceLastSawPlayer < suspicionTime){
+            }
+            else if (timeSinceLastSawPlayer < suspicionTime)
+            {
                 SuspicionBehaviour();
-            }else{
+            }
+            else
+            {
                 PatrolBehaviour();
             }
 
             UpdateTimers();
         }
 
-        public void Aggrevate(){
+        public void Aggrevate()
+        {
             timeSinceAggrevated = 0;
         }
 
-        private Vector3 GetGuardPosition(){
+        private Vector3 GetGuardPosition()
+        {
             return transform.position;
         }
 
@@ -81,7 +91,8 @@ namespace RPG.Control
             AgrrevateNearbyEnemies();
         }
 
-        private void AgrrevateNearbyEnemies(){
+        private void AgrrevateNearbyEnemies()
+        {
             RaycastHit[] hits = Physics.SphereCastAll(transform.position, shoutDistance, Vector3.up, 0);
             foreach (RaycastHit hit in hits)
             {
@@ -101,14 +112,16 @@ namespace RPG.Control
             Vector3 nextPosition = guardPosition.value;
 
             if(patrolPath != null){
-                if(AtWaypoint()){
-                timeSinceArrivedAtWaypoint = 0;
+                if(AtWaypoint())
+                {
+                    timeSinceArrivedAtWaypoint = 0;
                     CycleWaypoint();
                 }
                 nextPosition = GetCurrentWaypoint();
             }
             
-            if(timeSinceArrivedAtWaypoint > waypointDwellTime){
+            if(timeSinceArrivedAtWaypoint > waypointDwellTime)
+            {
                 mover.StartMoveAction(nextPosition, patrolSpeedFraction);
             }
         }
@@ -136,7 +149,8 @@ namespace RPG.Control
         }
 
         //Called by Unity
-        private void OnDrawGizmosSelected() {
+        private void OnDrawGizmosSelected() 
+        {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, chaseDistance);
         }

@@ -12,21 +12,29 @@ public class CameraZoom : MonoBehaviour
     float cameraDistance;
 
     void Update() {
-        if(componentBase == null){
+        if(componentBase == null)
+        {
             componentBase = virtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
         }
 
-        if(Input.GetAxis("Mouse ScrollWheel") != 0){
+        if(Input.GetAxis("Mouse ScrollWheel") != 0)
+        {
             cameraDistance = Input.GetAxis("Mouse ScrollWheel") * sensitivity;
-            if(componentBase is CinemachineFramingTransposer){
-                if(cameraDistance < 0){
+            if(componentBase is CinemachineFramingTransposer)
+            {
+                if(cameraDistance < 0)
+                {
                     (componentBase as CinemachineFramingTransposer).m_CameraDistance -= cameraDistance;
-                    if ((componentBase as CinemachineFramingTransposer).m_CameraDistance > maxCameraDistance){
+                    if ((componentBase as CinemachineFramingTransposer).m_CameraDistance > maxCameraDistance)
+                    {
                         (componentBase as CinemachineFramingTransposer).m_CameraDistance = maxCameraDistance;
                     }
-                }else{
+                }
+                else
+                {
                     (componentBase as CinemachineFramingTransposer).m_CameraDistance -= cameraDistance;
-                    if ((componentBase as CinemachineFramingTransposer).m_CameraDistance < minCameraDistance){
+                    if ((componentBase as CinemachineFramingTransposer).m_CameraDistance < minCameraDistance)
+                    {
                         (componentBase as CinemachineFramingTransposer).m_CameraDistance = minCameraDistance;
                     }
                 }

@@ -12,14 +12,14 @@ namespace RPG.Combat
         [SerializeField] float maxLifeTime = 10;
         [SerializeField] GameObject[] destroyOnHit;
         [SerializeField] float lifeAfterImpact = 2;
- 
         [SerializeField] UnityEvent onHit;
 
         Health target;
         GameObject instagator;
         float damage;
 
-        void Start(){
+        void Start()
+        {
             transform.LookAt(GetAimLocation());
         }
         
@@ -27,14 +27,16 @@ namespace RPG.Combat
         {
             if(target == null) return;
 
-            if(isHoming && !target.IsDead()){
+            if(isHoming && !target.IsDead())
+            {
                 transform.LookAt(GetAimLocation());
             }
             
             transform.Translate(Vector3.forward * Time.deltaTime * arrowSpeed);
         }
 
-        void OnTriggerEnter(Collider other) {
+        void OnTriggerEnter(Collider other) 
+        {
             if(other.GetComponent<Health>() != target) return;
 
             if(target.IsDead()) return;
@@ -43,20 +45,21 @@ namespace RPG.Combat
             arrowSpeed = 0;
             onHit.Invoke();
 
-            if(hitEffect != null){
+            if(hitEffect != null)
+            {
                 Instantiate(hitEffect, GetAimLocation(), transform.rotation);
             }
 
-            foreach(GameObject toDestroy in destroyOnHit){
+            foreach(GameObject toDestroy in destroyOnHit)
+            {
                 Destroy(toDestroy); 
             }
 
             Destroy(gameObject, lifeAfterImpact); 
-            //transform.SetParent(target.transform);  //Attach the arrow to the enemy
-            //target = null;  //clear the target so the arrow no longer moves
         }
 
-        public void SetTarget(Health target, GameObject instagator, float damage){
+        public void SetTarget(Health target, GameObject instagator, float damage)
+        {
             this.target = target;
             this.damage = damage;
             this.instagator = instagator;
@@ -64,10 +67,12 @@ namespace RPG.Combat
             Destroy(gameObject, maxLifeTime);
         }
 
-        Vector3 GetAimLocation(){
+        Vector3 GetAimLocation()
+        {
             CapsuleCollider targetCapsule = target.GetComponent<CapsuleCollider>();
 
-            if(targetCapsule == null){
+            if(targetCapsule == null)
+            {
                 return target.transform.position;
             }
 

@@ -9,7 +9,8 @@ namespace RPG.SceneManagement
 {
     public class Portal : MonoBehaviour
     {
-        enum DestinationIdentifier{
+        enum DestinationIdentifier
+        {
             A,
             B,
             C,
@@ -24,15 +25,19 @@ namespace RPG.SceneManagement
         [SerializeField] float fadeInTime = 2f;
         [SerializeField] float fadeWaitTime = 0.5f;
 
-        void OnTriggerEnter(Collider other) {
-            if(other.CompareTag("Player")){
+        void OnTriggerEnter(Collider other) 
+        {
+            if(other.CompareTag("Player"))
+            {
                 StartCoroutine(Transition());
             }
         }
 
         //Coroutine that runs between scenes
-        private IEnumerator Transition(){
-            if(sceneToLoad < 0){
+        private IEnumerator Transition()
+        {
+            if(sceneToLoad < 0)
+            {
                 Debug.LogError("Scene to load is not set");
                 yield break;
             }
@@ -85,7 +90,8 @@ namespace RPG.SceneManagement
 
         private Portal GetOtherPortal()
         {
-            foreach(Portal portal in FindObjectsOfType<Portal>()){  //Finding every portal in scene
+            foreach(Portal portal in FindObjectsOfType<Portal>())   //Finding every portal in scene
+            {
                 if(portal == this) continue;
                 if(portal.destination != destination) continue;
                 return portal;

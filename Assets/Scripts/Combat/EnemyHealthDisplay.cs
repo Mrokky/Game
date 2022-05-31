@@ -8,12 +8,15 @@ namespace RPG.Combat
     {
         Fighter fighter;
 
-        void Awake() {
+        void Awake() 
+        {
             fighter = GameObject.FindWithTag("Player").GetComponent<Fighter>();
         }
 
-        void Update() {
-            if(fighter.GetTarget() == null){
+        void Update() 
+        {
+            if(fighter.GetTarget() == null)
+            {
                 GetComponent<Text>().text = "Enemy: N/A";
                 return;
             }

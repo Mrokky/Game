@@ -9,11 +9,13 @@ namespace RPG.UI.DamageText
     {
         [SerializeField] Text damageText;
 
-        public void DestroyText(){
+        public void DestroyText()
+        {
             Destroy(gameObject);
         }
 
-        public void SetValue(float amount){
+        public void SetValue(float amount)
+        {
             damageText.text = "" + (float)amount;
         }
     }

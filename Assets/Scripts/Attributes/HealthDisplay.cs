@@ -7,11 +7,13 @@ namespace RPG.Attributes
     {
         Health health;
 
-        void Awake() {
+        void Awake() 
+        {
             health = GameObject.FindWithTag("Player").GetComponent<Health>();
         }
 
-        void Update() {
+        void Update() 
+        {
             GetComponent<Text>().text = ("Health: " + (int)health.GetHealthPoints() + "/" + (int)health.GetMaxHealthPoints());
         }
     }

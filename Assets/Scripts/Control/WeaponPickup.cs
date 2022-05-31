@@ -11,7 +11,8 @@ namespace RPG.Combat
         [SerializeField] float healthToRestore;
         [SerializeField] float respawnTime = 5;
         
-        void OnTriggerEnter(Collider other) {
+        void OnTriggerEnter(Collider other) 
+        {
             if(other.CompareTag("Player"))
             {
                 Pickup(other.gameObject);
@@ -20,7 +21,8 @@ namespace RPG.Combat
 
         public bool HandleRaycast(PlayerController callingController)
         {
-            if(Input.GetMouseButtonDown(0)){
+            if(Input.GetMouseButtonDown(0))
+            {
                 Pickup(callingController.gameObject);
             }
             return true;
@@ -33,26 +35,31 @@ namespace RPG.Combat
 
         private void Pickup(GameObject subject)
         {
-            if(weapon != null){
+            if(weapon != null)
+            {
                 subject.GetComponent<Fighter>().EquipWeapon(weapon);
             }
 
-            if(healthToRestore > 0){
+            if(healthToRestore > 0)
+            {
                 subject.GetComponent<Health>().Heal(healthToRestore);
             }
 
             StartCoroutine(HideForSeconds(respawnTime));
         }
 
-        private IEnumerator HideForSeconds(float seconds){
+        private IEnumerator HideForSeconds(float seconds)
+        {
             ShowPickup(false);
             yield return new WaitForSeconds(seconds);
             ShowPickup(true);
         }
 
-        private void ShowPickup(bool shouldShow){
+        private void ShowPickup(bool shouldShow)
+        {
             GetComponent<Collider>().enabled = shouldShow;
-            for(int i = 0; i < transform.childCount; i++){
+            for(int i = 0; i < transform.childCount; i++)
+            {
                 transform.GetChild(i).gameObject.SetActive(shouldShow);
             }
         }

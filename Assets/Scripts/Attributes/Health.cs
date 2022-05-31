@@ -17,28 +17,34 @@ namespace RPG.Attributes
         LazyValue<float> healthPoints;
         bool isDead;
 
-        void Awake() {
+        void Awake() 
+        {
             healthPoints = new LazyValue<float>(GetInitialHealth);
             baseStats = GetComponent<BaseStats>();
         }
 
-        void Start() {
+        void Start() 
+        {
             healthPoints.ForceInit();
         }
 
-        void OnEnable() {
+        void OnEnable() 
+        {
             baseStats.onLevelUp += RegenerateHealth;
         }
 
-        void OnDisable() {
+        void OnDisable() 
+        {
             baseStats.onLevelUp -= RegenerateHealth;
         }
 
-        public bool IsDead(){
+        public bool IsDead()
+        {
             return isDead;
         }
         
-        public void TakeDamage(GameObject instagator, float damage){
+        public void TakeDamage(GameObject instagator, float damage)
+        {
             healthPoints.value = Mathf.Max(healthPoints.value - damage, 0);
 
             if(healthPoints.value == 0)
@@ -46,29 +52,11 @@ namespace RPG.Attributes
                 onDie.Invoke();
                 Die();
                 AwardExperience(instagator);
-            }else{
+            }
+            else
+            {
                 takeDamage.Invoke(damage);
             }
-        }
-
-        public void Heal(float healthToRestore){
-            healthPoints.value = Mathf.Min(healthPoints.value + healthToRestore, GetMaxHealthPoints());
-        }
-
-        public float GetHealthPoints(){
-            return healthPoints.value;
-        }
-
-        public float GetMaxHealthPoints(){
-            return baseStats.GetStat(Stat.Health);
-        }
-
-        public float GetPercentage(){
-            return 100 * GetFraction();
-        }
-
-        public float GetFraction(){
-            return healthPoints.value / baseStats.GetStat(Stat.Health);
         }
 
         public void Die()
@@ -76,6 +64,31 @@ namespace RPG.Attributes
             isDead = true;
             GetComponent<Animator>().SetTrigger("die");
             GetComponent<ActionScheduler>().CancelCurrentAction();
+        }
+
+        public void Heal(float healthToRestore)
+        {
+            healthPoints.value = Mathf.Min(healthPoints.value + healthToRestore, GetMaxHealthPoints());
+        }
+
+        public float GetHealthPoints()
+        {
+            return healthPoints.value;
+        }
+
+        public float GetMaxHealthPoints()
+        {
+            return baseStats.GetStat(Stat.Health);
+        }
+
+        public float GetPercentage()
+        {
+            return 100 * GetFraction();
+        }
+
+        public float GetFraction()
+        {
+            return healthPoints.value / baseStats.GetStat(Stat.Health);
         }
 
         public object CaptureState()
@@ -92,7 +105,8 @@ namespace RPG.Attributes
             }
         }
 
-        private float GetInitialHealth(){
+        private float GetInitialHealth()
+        {
             return baseStats.GetStat(Stat.Health);
         }
 

@@ -10,10 +10,14 @@ namespace RPG.Core
 
         void Update()
         {
-            if(!GetComponent<ParticleSystem>().IsAlive()){
-                if(targetToDestroy != null){
+            if(!GetComponent<ParticleSystem>().IsAlive())
+            {
+                if(targetToDestroy != null)
+                {
                     Destroy(targetToDestroy);
-                }else{
+                }
+                else
+                {
                     Destroy(gameObject);
                 }
             }

@@ -6,7 +6,8 @@ public class Destroyer : MonoBehaviour
 {
     [SerializeField] GameObject targetToDestroy;
 
-    public void DestroyTarget(){
+    public void DestroyTarget()
+    {
         Destroy(targetToDestroy);
     }
 }
